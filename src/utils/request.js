@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "";
+const url = "http://localhost:8080/user";
 
 const req = axios.create({
   baseURL: url,
