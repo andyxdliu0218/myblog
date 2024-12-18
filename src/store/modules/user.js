@@ -6,12 +6,17 @@ const userStore = createSlice({
   name: "user",
   //state
   initialState: {
-    token: "",
+    // assign value to token by checking localstorage first
+    token: localStorage.getItem("token_key")
+      ? localStorage.getItem("token_key")
+      : "",
   },
   // sync method
   reducers: {
     setToken(state, action) {
       state.token = action.payload;
+      //store it into localstorage
+      localStorage.setItem("token_key", action.payload);
     },
   },
 });
@@ -21,7 +26,6 @@ const userStore = createSlice({
 const { setToken } = userStore.actions;
 
 // get reducer function
-
 const userReducer = userStore.reducer;
 
 // async method to retrieve token
