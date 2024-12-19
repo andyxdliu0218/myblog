@@ -1,5 +1,11 @@
-const Layout = () =>{
+import { req } from "@/utils";
+import { useEffect } from "react";
 
-    return <div>this is Layout</div>
-}
+const Layout = () => {
+  useEffect(() => {
+    req.get("/blog");
+  }, []);
+
+  return <div>this is Layout</div>;
+};
 export default Layout;
