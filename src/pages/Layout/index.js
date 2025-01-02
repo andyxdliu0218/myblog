@@ -9,29 +9,37 @@ import {
 } from "@ant-design/icons";
 
 import "./index.scss";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const { Header, Sider } = Layout;
 
 const items = [
   {
     label: "First Page",
-    key: "1",
+    key: "/",
     icon: <HomeOutlined />,
   },
   {
     label: "Blog Management",
-    key: "2",
+    key: "/article",
     icon: <DiffOutlined />,
   },
   {
     label: "Create Blog",
-    key: "3",
+    key: "/publish",
     icon: <EditOutlined />,
   },
 ];
 
 const GeekLayout = () => {
+  const navigate = useNavigate();
+
+  const onMenuClick = (value) => {
+    navigate(value.key);
+  };
+  const location = useLocation()
+  const selectedKeys = location.pathname
+
   return (
     <Layout>
       <Header className="header">
@@ -54,7 +62,8 @@ const GeekLayout = () => {
           <Menu
             mode="inline"
             theme="dark"
-            defaultOpenKeys={["1"]}
+            selectedKeys={selectedKeys}
+            onClick={onMenuClick}
             items={items}
             style={{ height: "100%", borderRight: 0 }}
           ></Menu>
