@@ -9,12 +9,24 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const onFinish = async (values) => {
-    // trigger indirect (async or thunk) action creator fetchlogin
-    await dispatch(fetchLogin(values));
-    // jump to homepage
-    navigate("/");
-    //remind user already login
-    message.success("Successfully logged in");
+    try {
+      // trigger indirect (async or thunk) action creator fetchlogin
+      const result = await dispatch(fetchLogin(values));
+      if (result) {
+        // jump to homepage
+        navigate("/");
+        // remind user already login
+        message.success("Successfully logged in");
+      } else {
+        // handle login failure
+        message.error(
+          "Login failed. Please check your credentials and try again."
+        );
+      }
+    } catch (error) {
+      // handle unexpected errors
+      message.error("An unexpected error occurred. Please try again later.");
+    }
   };
   return (
     <div className="login">

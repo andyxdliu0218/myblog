@@ -7,9 +7,15 @@
 }
 
 .logo {
-  width: 200px;
-  height: 60px;
-  background: url("~@/assets/logo.png") no-repeat center / 160px auto;
+  width: 150px; /* Adjust the width as needed */
+  height: 150px; /* Adjust the height as needed */
+  background: url("~@/assets/logo.png") no-repeat center;
+  background-size: contain; /* Maintain aspect ratio */
+  margin: 0 auto; /* Center the image horizontally */
+  display: block; /* Ensure the image is treated as a block element */
+  position: absolute; /* Position it absolutely */
+  top: 0; /* Align it to the top */
+  left: 0; /* Align it to the left */
 }
 
 .layout-conent {

@@ -1,29 +1,29 @@
-.login{
-    width: 100%;
-    height: 100%;
+.login {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: center/cover url("~@/assets/login.png");
+
+  .login-logo {
+    width: 150px; /* Adjust the width as needed */
+    height: 150px; /* Adjust the height as needed */
+    object-fit: contain; /* Maintain aspect ratio */
+    margin: 0 auto; /* Center the image horizontally */
+    display: block; /* Ensure the image is treated as a block element */
+  }
+
+  .login-container {
+    width: 440px;
+    height: 360px;
     position: absolute;
-    left: 0;
-    top: 0;
-    background: center/cover url('~@/assets/login.png');
-
-
-    .login-logo{
-        width: 200px;
-        height: 60px;
-        display: block;
-        margin: 0 auto 20px;
-    }
-
-    .login-container{
-        width: 440px;
-        height: 360px;
-        position: absolute;
-        left: 50%;
-        top:50%;
-        transform: translate(-50%,-50%);
-        box-shadow: 0 0 50px rgb(0 0 0/ 10%);
-    }
-    .login-checkbox-label{
-        color: #1890ff
-    }
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 50px rgb(0 0 0/ 10%);
+  }
+  .login-checkbox-label {
+    color: #1890ff;
+  }
 }

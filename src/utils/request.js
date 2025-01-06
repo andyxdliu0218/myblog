@@ -15,6 +15,7 @@ req.interceptors.request.use(
     const token = getToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      // config.headers.Authorization = token;
     }
     return config;
   },
@@ -27,6 +28,7 @@ req.interceptors.request.use(
 // response interceptor
 req.interceptors.response.use(
   (response) => {
+    // console.log(response);
     return response.data;
   },
   (error) => {

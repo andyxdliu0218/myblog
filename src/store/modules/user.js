@@ -2,13 +2,15 @@ import { req } from "@/utils";
 import { createSlice } from "@reduxjs/toolkit";
 import { setToken as _setToken, getToken } from "@/utils";
 
-const tokenUrl = "";
+const tokenUrl = "/login";
 const userStore = createSlice({
   name: "user",
   //state
   initialState: {
     // assign value to token by checking localstorage first
     token: getToken() ? getToken() : "",
+    // using redux to main user infomraiton
+    userInfo: {},
   },
   // sync method
   reducers: {
@@ -18,12 +20,15 @@ const userStore = createSlice({
       //localStorage.setItem("token_key", action.payload);
       _setToken(action.payload);
     },
+    setUserInfo(state, action) {
+      state.userInfo = action.payload;
+    },
   },
 });
 
 // destructure actionCreater
 
-const { setToken } = userStore.actions;
+const { setToken, setUserInfo } = userStore.actions;
 
 // get reducer function
 const userReducer = userStore.reducer;
@@ -38,12 +43,30 @@ const fetchLogin = (loginForm) => {
       url: tokenUrl,
       data: loginForm,
     });
-
-    // 2. store token
-    dispatch(setToken(res.data.token));
+    // console.log(res);
+    if (res.code === "200") {
+      // 2. store token
+      dispatch(setToken(res.data.token));
+      return true;
+    } else {
+      alert(res.message);
+      return false;
+    }
   };
 };
 
-export { setToken, fetchLogin };
+// aysnc method to get user information
+const fetchUserInfo = () => {
+  return async (dispatch) => {
+    const res = await req({
+      method: "get",
+      url: "/userInfo",
+    });
+
+    dispatch(setUserInfo(res.data));
+  };
+};
+
+export { fetchUserInfo, fetchLogin, setToken };
 
 export default userReducer;
