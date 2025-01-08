@@ -1,4 +1,4 @@
-import { req } from "@/utils";
+import { removeToken, req } from "@/utils";
 import { createSlice } from "@reduxjs/toolkit";
 import { setToken as _setToken, getToken } from "@/utils";
 
@@ -23,12 +23,17 @@ const userStore = createSlice({
     setUserInfo(state, action) {
       state.userInfo = action.payload;
     },
+    clearUserInfo(state,action) {
+      state.token="";
+      state.userInfo={};
+      removeToken()
+    }
   },
 });
 
 // destructure actionCreater
 
-const { setToken, setUserInfo } = userStore.actions;
+const { setToken, setUserInfo, clearUserInfo } = userStore.actions;
 
 // get reducer function
 const userReducer = userStore.reducer;
@@ -49,7 +54,6 @@ const fetchLogin = (loginForm) => {
       dispatch(setToken(res.data.token));
       return true;
     } else {
-      alert(res.message);
       return false;
     }
   };
@@ -67,6 +71,6 @@ const fetchUserInfo = () => {
   };
 };
 
-export { fetchUserInfo, fetchLogin, setToken };
+export { fetchUserInfo, fetchLogin,  clearUserInfo};
 
 export default userReducer;

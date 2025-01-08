@@ -11,7 +11,8 @@ import {
 import "./index.scss";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserInfo } from "@/store/modules/user";
+import { clearUserInfo, fetchUserInfo } from "@/store/modules/user";
+
 
 const { Header, Sider } = Layout;
 
@@ -48,7 +49,20 @@ const GeekLayout = () => {
   }, [dispatch]);
   const name = useSelector((state) => state.user.userInfo.nickname);
 
+  const confirm = () => {
+    // 1. clear token
+    // 2. redirect to login page
+    dispatch(clearUserInfo());
+    navigate('/login')
+
+  }
+
+  // const cancel = ()=>{
+
+  // }
+
   return (
+    
     <Layout>
       <Header className="header">
         <div className="logo" />
@@ -59,6 +73,7 @@ const GeekLayout = () => {
               title="Please confirm to log out"
               okText="logout"
               cancelText="cancel"
+              onConfirm={confirm}
             >
               <LogoutOutlined /> logout
             </Popconfirm>
@@ -77,7 +92,9 @@ const GeekLayout = () => {
           ></Menu>
         </Sider>
         <Layout className="layout-content" style={{ padding: 20 }}>
+
           <Outlet />
+
         </Layout>
       </Layout>
     </Layout>
