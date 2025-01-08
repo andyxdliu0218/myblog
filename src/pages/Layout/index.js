@@ -1,5 +1,5 @@
 // import { req } from "@/utils";
-import { useEffect } from "react";
+import { useEffect, useCallback} from "react";
 import { Layout, Menu, Popconfirm } from "antd";
 import {
   HomeOutlined,
@@ -36,8 +36,11 @@ const items = [
 
 const GeekLayout = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const selectedKeys = location.pathname;
 
-  const onMenuClick = (value) => {
+  const onMenuClick = useCallback((value) => {
     if (value.key === "/article" || value.key === "/publish") {
       dispatch(fetchUserInfo());
     }
@@ -46,10 +49,20 @@ const GeekLayout = () => {
     } else {
       navigate("/login");
     }
-  };
-  const location = useLocation();
-  const selectedKeys = location.pathname;
-  const dispatch = useDispatch();
+  }, [dispatch, navigate]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        await dispatch(fetchUserInfo());
+      } catch (error) {
+        console.error("Failed to fetch user info:", error);
+      }
+    };
+    
+    fetchUser();
+  }, [dispatch]);
+  
 
   useEffect(() => {
     dispatch(fetchUserInfo());

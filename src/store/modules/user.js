@@ -8,7 +8,7 @@ const userStore = createSlice({
   //state
   initialState: {
     // assign value to token by checking localstorage first
-    token: getToken() ? getToken() : "",
+    token: getToken() || "",
     // using redux to main user infomraiton
     userInfo: {},
   },
@@ -23,6 +23,7 @@ const userStore = createSlice({
     setUserInfo(state, action) {
       state.userInfo = action.payload;
     },
+
     clearUserInfo(state,action) {
       state.token="";
       state.userInfo={};
@@ -66,7 +67,7 @@ const fetchUserInfo = () => {
       method: "get",
       url: "/userInfo",
     });
-
+    
     dispatch(setUserInfo(res.data));
   };
 };
