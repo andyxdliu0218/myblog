@@ -1,5 +1,6 @@
 import axios from "axios";
-import { getToken } from "./token";
+import { getToken, removeToken } from "./token";
+import router from "@/router";
 
 const url = "http://localhost:8080/user";
 
@@ -28,10 +29,26 @@ req.interceptors.request.use(
 // response interceptor
 req.interceptors.response.use(
   (response) => {
-    // console.log(response);
-    return response.data;
+    console.log(response);
+    if (response.data.code === "401") {
+      // 1. clear token
+      // logout
+      // redirect to login page
+      removeToken();
+      router.navigate("/login");
+      alert("Please login again.");
+      window.location.reload();
+      return { data: null };
+    } else {
+      return response.data;
+    }
   },
   (error) => {
+    removeToken();
+    router.navigate("/login");
+    alert("Something went wrong. Please login again later.");
+    window.location.reload();
+
     return Promise.reject(error);
   }
 );

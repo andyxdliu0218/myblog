@@ -12,7 +12,7 @@ import "./index.scss";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUserInfo, fetchUserInfo } from "@/store/modules/user";
-
+import { getToken } from "@/utils";
 
 const { Header, Sider } = Layout;
 
@@ -38,31 +38,37 @@ const GeekLayout = () => {
   const navigate = useNavigate();
 
   const onMenuClick = (value) => {
-    navigate(value.key);
+    if (value.key === "/article" || value.key === "/publish") {
+      dispatch(fetchUserInfo());
+    }
+    if (getToken()) {
+      navigate(value.key);
+    } else {
+      navigate("/login");
+    }
   };
   const location = useLocation();
   const selectedKeys = location.pathname;
   const dispatch = useDispatch();
 
   useEffect(() => {
-     dispatch(fetchUserInfo());
+    dispatch(fetchUserInfo());
   }, [dispatch]);
+
   const name = useSelector((state) => state.user.userInfo.nickname);
 
   const confirm = () => {
     // 1. clear token
     // 2. redirect to login page
     dispatch(clearUserInfo());
-    navigate('/login')
-
-  }
+    navigate("/login");
+  };
 
   // const cancel = ()=>{
 
   // }
 
   return (
-    
     <Layout>
       <Header className="header">
         <div className="logo" />
@@ -92,9 +98,7 @@ const GeekLayout = () => {
           ></Menu>
         </Sider>
         <Layout className="layout-content" style={{ padding: 20 }}>
-
           <Outlet />
-
         </Layout>
       </Layout>
     </Layout>
