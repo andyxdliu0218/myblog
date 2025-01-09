@@ -32,16 +32,14 @@ req.interceptors.response.use(
     console.log(response);
     if (response.data.code === "401") {
       // 1. clear token
-      // logout
-      // redirect to login page
+      // 2.redirect to login page
       removeToken();
       router.navigate("/login");
       alert("Please login again.");
       window.location.reload();
-      return { data: null };
-    } else {
-      return response.data;
+      response.data.data = { nickname: "" };
     }
+    return response.data;
   },
   (error) => {
     removeToken();

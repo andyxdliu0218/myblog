@@ -1,11 +1,20 @@
 import "./index.scss";
-import { Card, Form, Input, Button, message } from "antd";
+import { Card, message } from "antd";
 import logo from "@/assets/logo.png";
 import { useDispatch } from "react-redux";
 import { fetchLogin } from "@/store/modules/user";
 import { useNavigate } from "react-router-dom";
+import { LoginForm } from "@/components/LoginForm";
+import { RegisterForm } from "@/components/RegisterForm";
+import { useState } from "react";
+import { req } from "@/utils";
 
 const Login = () => {
+  const [regist, setRegist] = useState(false);
+  const onRegister = () => {
+    setRegist(!regist);
+  };
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const onFinish = async (values) => {
@@ -28,48 +37,40 @@ const Login = () => {
       message.error("An unexpected error occurred. Please try again later.");
     }
   };
+
+  const onFinishRegister = async (values) => {
+    try {
+      // trigger indirect (async or thunk) action creator fetchlogin
+      const result = await req({
+        method: "post",
+        url: "/register",
+        data: values,
+      });
+      if (result.code === "200") {
+        // switch to login form
+        onRegister();
+        message.success("Successfully registered");
+      } else if (result.code === "409") {
+        // handle Invalid username
+        message.error(result.message);
+      }
+    } catch (error) {
+      // handle unexpected errors
+      message.error("An unexpected error occurred. Please try again later.");
+    }
+  };
+
   return (
     <div className="login">
       <Card className="login-container">
-        <img className="login-logo" src={logo} alt="" />
-        <Form onFinish={onFinish} validateTrigger="onBlur">
-          <Form.Item
-            name="username"
-            rules={[
-              {
-                required: true,
-                message: "Please input your username",
-              },
-              {
-                pattern: /^[a-zA-Z0-9]+$/,
-                message: "Username only contains letters and numbers",
-              },
-            ]}
-          >
-            <Input size="large" placeholder="please enter your username" />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Please input your password",
-              },
-              {
-                pattern: /^[a-zA-Z0-9]{8,}$/,
-                message:
-                  "Password contains at least 8 characters long with letters and numbers",
-              },
-            ]}
-          >
-            <Input size="large" placeholder="please enter your password" />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" size="large" block>
-              login
-            </Button>
-          </Form.Item>
-        </Form>
+        {!regist && <img className="login-logo" src={logo} alt="Login Logo" />}
+        {!regist && <LoginForm onFinish={onFinish} onRegister={onRegister} />}
+        {regist && (
+          <RegisterForm
+            onFinishRegister={onFinishRegister}
+            onRegister={onRegister}
+          />
+        )}
       </Card>
     </div>
   );
