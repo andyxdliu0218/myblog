@@ -1,5 +1,5 @@
 // import { req } from "@/utils";
-import { useEffect, useCallback} from "react";
+import { useEffect, useCallback } from "react";
 import { Layout, Menu, Popconfirm } from "antd";
 import {
   HomeOutlined,
@@ -11,8 +11,12 @@ import {
 import "./index.scss";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { clearUserInfo, fetchUserInfo } from "@/store/modules/user";
-import { getToken } from "@/utils";
+import {
+  clearUserInfo,
+  fetchUserInfo,
+  verifyToken,
+} from "@/store/modules/user";
+import { loginUrl } from "@/utils";
 
 const { Header, Sider } = Layout;
 
@@ -40,16 +44,21 @@ const GeekLayout = () => {
   const location = useLocation();
   const selectedKeys = location.pathname;
 
-  const onMenuClick = useCallback((value) => {
-    if (value.key === "/article" || value.key === "/publish") {
-      dispatch(fetchUserInfo());
-    }
-    if (getToken()) {
-      navigate(value.key);
-    } else {
-      navigate("/login");
-    }
-  }, [dispatch, navigate]);
+  const onMenuClick = useCallback(
+    async (value) => {
+      let res = true;
+      if (value.key === "/article" || value.key === "/publish") {
+        res = await dispatch(verifyToken());
+      }
+      console.log("res is " + res);
+      if (res) {
+        navigate(value.key);
+      } else {
+        navigate(loginUrl);
+      }
+    },
+    [dispatch, navigate]
+  );
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -59,10 +68,9 @@ const GeekLayout = () => {
         console.error("Failed to fetch user info:", error);
       }
     };
-    
+
     fetchUser();
   }, [dispatch]);
-  
 
   useEffect(() => {
     dispatch(fetchUserInfo());
@@ -74,7 +82,7 @@ const GeekLayout = () => {
     // 1. clear token
     // 2. redirect to login page
     dispatch(clearUserInfo());
-    navigate("/login");
+    navigate(loginUrl);
   };
 
   // const cancel = ()=>{

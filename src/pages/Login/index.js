@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { LoginForm } from "@/components/LoginForm";
 import { RegisterForm } from "@/components/RegisterForm";
 import { useState } from "react";
-import { req } from "@/utils";
+import { req, signUpUrl } from "@/utils";
 
 const Login = () => {
   const [regist, setRegist] = useState(false);
@@ -43,7 +43,7 @@ const Login = () => {
       // trigger indirect (async or thunk) action creator fetchlogin
       const result = await req({
         method: "post",
-        url: "/register",
+        url: signUpUrl,
         data: values,
       });
       if (result.code === "200") {

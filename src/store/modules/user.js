@@ -1,8 +1,13 @@
-import { removeToken, req } from "@/utils";
+import {
+  loginUrl,
+  removeToken,
+  req,
+  userInfoUrl,
+  verifyTokenUrl,
+} from "@/utils";
 import { createSlice } from "@reduxjs/toolkit";
 import { setToken as _setToken, getToken } from "@/utils";
 
-const tokenUrl = "/login";
 const userStore = createSlice({
   name: "user",
   //state
@@ -24,11 +29,11 @@ const userStore = createSlice({
       state.userInfo = action.payload;
     },
 
-    clearUserInfo(state,action) {
-      state.token="";
-      state.userInfo={};
-      removeToken()
-    }
+    clearUserInfo(state, action) {
+      state.token = "";
+      state.userInfo = {};
+      removeToken();
+    },
   },
 });
 
@@ -46,7 +51,7 @@ const fetchLogin = (loginForm) => {
     // 1. request for token
     const res = await req({
       method: "post",
-      url: tokenUrl,
+      url: loginUrl,
       data: loginForm,
     });
     // console.log(res);
@@ -65,13 +70,28 @@ const fetchUserInfo = () => {
   return async (dispatch) => {
     const res = await req({
       method: "get",
-      url: "/userInfo",
+      url: userInfoUrl,
     });
-    
+
     dispatch(setUserInfo(res.data));
   };
 };
 
-export { fetchUserInfo, fetchLogin,  clearUserInfo};
+const verifyToken = () => {
+  return async () => {
+    const res = await req({
+      method: "get",
+      url: verifyTokenUrl,
+    });
+    if (res.code === "200") {
+      return true;
+    } else {
+      removeToken();
+      return false;
+    }
+  };
+};
+
+export { fetchUserInfo, fetchLogin, verifyToken, clearUserInfo };
 
 export default userReducer;

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { getToken, removeToken } from "./token";
 import router from "@/router";
+import { loginUrl } from "./url";
 
 const url = "http://localhost:8080/user";
 
@@ -34,7 +35,7 @@ req.interceptors.response.use(
       // 1. clear token
       // 2.redirect to login page
       removeToken();
-      router.navigate("/login");
+      router.navigate(loginUrl);
       alert("Please login again.");
       window.location.reload();
       response.data.data = { nickname: "" };
