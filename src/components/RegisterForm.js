@@ -56,7 +56,7 @@ export const RegisterForm = ({ onFinishRegister, onRegister }) => {
           <Button type="primary" htmlType="submit" size="large">
             Register
           </Button>
-          <Button type="primary" size="large" onClick={onRegister}>
+          <Button size="large" onClick={onRegister}>
             Back to Login
           </Button>
         </Space>

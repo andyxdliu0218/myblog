@@ -39,7 +39,7 @@ export const LoginForm = ({ onFinish, onRegister }) => {
           <Button type="primary" htmlType="submit" size="large">
             Login
           </Button>
-          <Button type="primary" size="large" onClick={onRegister}>
+          <Button type="default" size="large" onClick={onRegister}>
             Sign Up
           </Button>
         </Space>
