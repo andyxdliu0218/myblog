@@ -1,12 +1,7 @@
-import {
-  loginUrl,
-  removeToken,
-  req,
-  userInfoUrl,
-  verifyTokenUrl,
-} from "@/utils";
+import { removeToken } from "@/utils";
 import { createSlice } from "@reduxjs/toolkit";
 import { setToken as _setToken, getToken } from "@/utils";
+import { loginAPI, verifyTokenAPI, getProfileAPI } from "@/apis/user";
 
 const userStore = createSlice({
   name: "user",
@@ -49,11 +44,7 @@ const userReducer = userStore.reducer;
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
     // 1. request for token
-    const res = await req({
-      method: "post",
-      url: loginUrl,
-      data: loginForm,
-    });
+    const res = await loginAPI(loginForm);
     // console.log(res);
     if (res.code === "200") {
       // 2. store token
@@ -68,10 +59,7 @@ const fetchLogin = (loginForm) => {
 // aysnc method to get user information
 const fetchUserInfo = () => {
   return async (dispatch) => {
-    const res = await req({
-      method: "get",
-      url: userInfoUrl,
-    });
+    const res = await getProfileAPI();
 
     dispatch(setUserInfo(res.data));
   };
@@ -79,10 +67,7 @@ const fetchUserInfo = () => {
 
 const verifyToken = () => {
   return async () => {
-    const res = await req({
-      method: "get",
-      url: verifyTokenUrl,
-    });
+    const res = await verifyTokenAPI();
     if (res.code === "200") {
       return true;
     } else {

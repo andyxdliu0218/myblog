@@ -30,7 +30,7 @@ req.interceptors.request.use(
 // response interceptor
 req.interceptors.response.use(
   (response) => {
-    console.log(response);
+    // console.log(response);
     if (response.data.code === "401") {
       // 1. clear token
       // 2.redirect to login page

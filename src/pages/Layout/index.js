@@ -22,7 +22,7 @@ const { Header, Sider } = Layout;
 
 const items = [
   {
-    label: "First Page",
+    label: "Home Page",
     key: "/",
     icon: <HomeOutlined />,
   },
@@ -50,7 +50,7 @@ const GeekLayout = () => {
       if (value.key === "/article" || value.key === "/publish") {
         res = await dispatch(verifyToken());
       }
-      console.log("res is " + res);
+      // console.log("res is " + res);
       if (res) {
         navigate(value.key);
       } else {
