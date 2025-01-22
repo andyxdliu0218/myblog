@@ -4,6 +4,7 @@ export const LoginForm = ({ onFinish, onRegister }) => {
   return (
     <Form name="basic" onFinish={onFinish} validateTrigger="onBlur">
       <Form.Item
+        label="Username"
         name="username"
         rules={[
           {
@@ -19,6 +20,7 @@ export const LoginForm = ({ onFinish, onRegister }) => {
         <Input size="large" placeholder="please enter your username" />
       </Form.Item>
       <Form.Item
+        label="Password"
         name="password"
         rules={[
           {

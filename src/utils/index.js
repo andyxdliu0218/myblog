@@ -2,7 +2,7 @@
 
 import { req } from "./request";
 import { setToken, getToken, removeToken } from "./token";
-import { signUpUrl, loginUrl, userInfoUrl,verifyTokenUrl} from "./url";
+import { signUpUrl, loginUrl, userInfoUrl,verifyTokenUrl,createArticleUrl} from "./url";
 
 export {
   req,
@@ -13,4 +13,5 @@ export {
   loginUrl,
   userInfoUrl,
   verifyTokenUrl,
+  createArticleUrl
 };

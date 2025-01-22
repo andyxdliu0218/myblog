@@ -5,19 +5,36 @@ import {
   Button,
   Radio,
   Input,
-  Upload,
   Space,
   Select,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+// import { PlusOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import "./index.scss";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { createArticleAPI } from "@/apis/article";
 
 const { Option } = Select;
 
 const Publish = () => {
+  const [form] = Form.useForm();
+
+  const onFinish = async (formValue) => {
+    console.log(formValue);
+    if (
+      !formValue.content ||
+      formValue.content.trim() === "" ||
+      formValue.content === "<p><br></p>"
+    ) {
+      form.resetFields();
+      return;
+    } else {
+      const res = await createArticleAPI(formValue);
+      console.log(res);
+    }
+  };
+
   return (
     <div className="publish">
       <Card
@@ -31,34 +48,23 @@ const Publish = () => {
         }
       >
         <Form
+          form={form}
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 1 }}
+          onFinish={onFinish}
         >
           <Form.Item
             label="Title"
-            // name="title"
+            name="title"
             rules={[{ required: true, message: "Please input title" }]}
           >
             <Input placeholder="Please input title" style={{ width: 400 }} />
           </Form.Item>
-          <Form.Item label="Tags" name="tags">
-            <Select
-              mode="tags"
-              placeholder="Please input tags"
-              style={{ width: 400 }}
-            ></Select>
-          </Form.Item>
-          <Form.Item label="Type" name="type">
-            <Radio.Group>
-              <Radio value={1}>Original</Radio>
-              <Radio value={2}>Reprint</Radio>
-            </Radio.Group>
-          </Form.Item>
 
           <Form.Item
             label="Content"
-            // name="content"
+            name="content"
             rules={[{ required: true, message: "Please input content" }]}
           >
             {/* input area */}
@@ -70,8 +76,10 @@ const Publish = () => {
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 4 }}>
             <Space>
-              <Button type="primary">Submit</Button>
-              <Button>Cancel</Button>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+              <Button htmlType="reset">Reset</Button>
             </Space>
           </Form.Item>
         </Form>

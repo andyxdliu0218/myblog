@@ -1,12 +1,12 @@
 import axios from "axios";
 import { getToken, removeToken } from "./token";
 import router from "@/router";
-import { loginUrl } from "./url";
+import { loginUrl, baseURL } from "./url";
 
-const url = "http://localhost:8080/user";
+// create axios instance
 
 const req = axios.create({
-  baseURL: url,
+  baseURL: baseURL,
   timeout: 5000,
 });
 
