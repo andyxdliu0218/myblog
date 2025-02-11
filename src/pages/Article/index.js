@@ -27,10 +27,6 @@ const Article = () => {
   };
   const columns = [
     { title: "Title", dataIndex: "title" },
-    { title: "Read Count", dataIndex: "read_count" },
-    { title: "Comment Count", dataIndex: "comment_count" },
-    { title: "Like Count", dataIndex: "like_count" },
-    { title: "Publish Date", dataIndex: "pubdate" },
     {
       title: "Status",
       dataIndex: "status",
@@ -41,7 +37,10 @@ const Article = () => {
           <Tag color="magenta">Pending review</Tag>
         ),
     },
-
+    { title: "Publish Date", dataIndex: "pubdate" },
+    { title: "Read Count", dataIndex: "read_count" },
+    { title: "Comment Count", dataIndex: "comment_count" },
+    { title: "Like Count", dataIndex: "like_count" },
     {
       title: "Action",
       render: (data) => {
@@ -90,7 +89,7 @@ const Article = () => {
             <Radio.Group>
               <Radio value={null}>All</Radio>
               <Radio value={0}>Draft</Radio>
-              <Radio value={2}>Ok to Publish</Radio>
+              <Radio value={2}>Approved</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item label="Date" name="date">
