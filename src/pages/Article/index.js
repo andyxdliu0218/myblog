@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   Breadcrumb,
@@ -13,6 +13,7 @@ import {
 import { Table, Tag, Space } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import img404 from "@/assets/error.png";
+import { getArticleAPI } from "@/apis/article";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -31,16 +32,17 @@ const Article = () => {
       title: "Status",
       dataIndex: "status",
       render: (data) =>
-        data === 2 ? (
+        data === undefined || data === 2 ? (
           <Tag color="green">Approved</Tag>
         ) : (
           <Tag color="magenta">Pending review</Tag>
         ),
     },
-    { title: "Publish Date", dataIndex: "pubdate" },
-    { title: "Read Count", dataIndex: "read_count" },
-    { title: "Comment Count", dataIndex: "comment_count" },
-    { title: "Like Count", dataIndex: "like_count" },
+    { title: "Publish Time", dataIndex: "createTime" },
+    { title: "Update Time", dataIndex: "updateTime" },
+    // { title: "Read Count", dataIndex: "read_count" },
+    // { title: "Comment Count", dataIndex: "comment_count" },
+    // { title: "Like Count", dataIndex: "like_count" },
     {
       title: "Action",
       render: (data) => {
@@ -59,15 +61,27 @@ const Article = () => {
     },
   ];
 
+  const [list, setList] = useState([]);
+  useEffect(() => {
+    async function getList() {
+      const res = await getArticleAPI();
+      console.log(res);
+      const sortedList = res.data.sort(
+        (a, b) => new Date(b.updateTime) - new Date(a.updateTime)
+      );
+
+      setList(res.data);
+    }
+    getList();
+  }, []);
+
   // body data
   const data = [
     {
       id: "8218",
-      read_count: 2,
-      comment_count: 0,
-      like_count: 0,
-      pubdate: "2021-09-01 09:00:00",
-      status: 2,
+      update_time: "2021-09-01 09:00:00",
+      create_time: "2021-09-01 09:00:00",
+      status: null,
       title: "Article 1",
     },
   ];
@@ -102,8 +116,10 @@ const Article = () => {
           </Form.Item>
         </Form>
       </Card>
-      <Card>
-        <Table rowKey="id" columns={columns} dataSource={data} />
+      <Card
+        title={`Based on the filtering criteria, ${list.length} results have been found`}
+      >
+        <Table rowKey="id" columns={columns} dataSource={list} />
       </Card>
     </div>
   );
