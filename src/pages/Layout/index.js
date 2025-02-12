@@ -78,11 +78,11 @@ const GeekLayout = () => {
 
   const name = useSelector((state) => state.user.userInfo.nickname);
 
-  const confirm = () => {
+  const onConfirm = () => {
     // 1. clear token
     // 2. redirect to login page
-    dispatch(clearUserInfo());
-    navigate(loginUrl);
+    clearUserInfo();
+    navigate("/login");
   };
 
   // const cancel = ()=>{
@@ -100,7 +100,7 @@ const GeekLayout = () => {
               title="Please confirm to log out"
               okText="logout"
               cancelText="cancel"
-              onConfirm={confirm}
+              onConfirm={onConfirm}
             >
               <LogoutOutlined /> logout
             </Popconfirm>
