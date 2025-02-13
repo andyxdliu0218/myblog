@@ -1,5 +1,5 @@
 import { req } from "@/utils";
-import { createArticleUrl,getArticleUrl } from "@/utils";
+import { createArticleUrl, getArticleUrl } from "@/utils";
 
 export function createArticleAPI(formData) {
   return req({
@@ -13,6 +13,14 @@ export function getArticleAPI(params) {
   return req({
     method: "get",
     url: getArticleUrl,
-    params
+    params,
+  });
+}
+
+export function getArticleByDateAPI(params) {
+  return req({
+    method: "get",
+    url: "/blog/date",
+    params,
   });
 }
