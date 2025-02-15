@@ -81,7 +81,7 @@ const GeekLayout = () => {
   const onConfirm = () => {
     // 1. clear token
     // 2. redirect to login page
-    clearUserInfo();
+    dispatch(clearUserInfo());
     navigate("/login");
   };
 
