@@ -23,7 +23,7 @@ const { Header, Sider } = Layout;
 const items = [
   {
     label: "Home Page",
-    key: "/",
+    key: "/home",
     icon: <HomeOutlined />,
   },
   {
@@ -70,10 +70,7 @@ const GeekLayout = () => {
     };
 
     fetchUser();
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(fetchUserInfo());
+    console.log("fetch user info");
   }, [dispatch]);
 
   const name = useSelector((state) => state.user.userInfo.nickname);

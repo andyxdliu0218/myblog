@@ -23,7 +23,7 @@ const Login = () => {
       const result = await dispatch(fetchLogin(values));
       if (result) {
         // jump to homepage
-        navigate("/");
+        navigate("/home");
         // remind user already login
         message.success("Successfully logged in");
       } else {
