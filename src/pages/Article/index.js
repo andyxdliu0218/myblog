@@ -15,7 +15,7 @@ import {
 import { Table, Tag, Space } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import img404 from "@/assets/error.png";
-import { getArticleAPI, getArticleByDateAPI } from "@/apis/article";
+import { getArticleAPI, getArticleByDateAPI,getListByDateWithStatusAPI } from "@/apis/article";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -42,6 +42,13 @@ const Article = () => {
     );
   };
 
+  const getListByDateWithStatus = async (date1, date2, status) => {
+    const res = await getListByDateWithStatusAPI({ date1, date2 },status);
+    setList(
+      res.data.sort((a, b) => new Date(b.updateTime) - new Date(a.updateTime))
+    );
+  };
+
   const onFinish = (formValue) => {
     // console.log(formValue);
     const { date, status } = formValue;
@@ -49,17 +56,14 @@ const Article = () => {
       message.error("Please select date");
       return;
     }
+    console.log(status);
     const data1 = `${date[0].year()}-${date[0].month() + 1}-${date[0].date()}`;
     const data2 = `${date[1].year()}-${date[1].month() + 1}-${date[1].date()}`;
-    getListByDate(data1, data2);
-    // if (list) {
-    //   console.log(list);
-    //   const items = list.filter(
-    //     (item) => { const date = new Date(item.createTime.substring(0,9));return date >= new Date(data1) && date <= new Date(data2)}
-    //   );
-    //   console.log(items);
-    //   setList(items);
-    // }
+    if (status == 2 || status == undefined) {
+      getListByDate(data1, data2);
+    } else {
+      getListByDateWithStatus(data1, data2, status);
+    }
   };
   const columns = [
     { title: "Title", dataIndex: "title" },
@@ -112,19 +116,19 @@ const Article = () => {
         title={
           <Breadcrumb
             items={[
-              { title: <Link to={"/"}>Home</Link> },
+              { title: <Link to={"/home"}>Home</Link> },
               { title: "Post Article" },
             ]}
           />
         }
         style={{ marginBottom: 20 }}
       >
-        <Form initialValues={{ status: "all" }} onFinish={onFinish}>
+        <Form initialValues={{ status: 2 }} onFinish={onFinish}>
           <Form.Item label="Status" name="status">
             <Radio.Group defaultValue={0}>
-              <Radio value={0}>All</Radio>
-              <Radio value={1}>Draft</Radio>
-              <Radio value={2}>Approved</Radio>
+              <Radio value={2}>All</Radio>
+              <Radio value={0}>Draft</Radio>
+              <Radio value={1}>Approved</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item label="Date" name="date">

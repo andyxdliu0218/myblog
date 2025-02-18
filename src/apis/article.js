@@ -24,3 +24,11 @@ export function getArticleByDateAPI(params) {
     params,
   });
 }
+
+export function getListByDateWithStatusAPI(params, status) {
+  return req({
+    method: "get",
+    url: `/blog/date/${status}`,
+    params,
+  });
+}
