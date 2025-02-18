@@ -70,7 +70,7 @@ const GeekLayout = () => {
     };
 
     fetchUser();
-    console.log("fetch user info");
+    // console.log("fetch user info");
   }, [dispatch]);
 
   const name = useSelector((state) => state.user.userInfo.nickname);

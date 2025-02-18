@@ -15,7 +15,11 @@ import {
 import { Table, Tag, Space } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import img404 from "@/assets/error.png";
-import { getArticleAPI, getArticleByDateAPI,getListByDateWithStatusAPI } from "@/apis/article";
+import {
+  getArticleAPI,
+  getArticleByDateAPI,
+  getListByDateWithStatusAPI,
+} from "@/apis/article";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -43,7 +47,7 @@ const Article = () => {
   };
 
   const getListByDateWithStatus = async (date1, date2, status) => {
-    const res = await getListByDateWithStatusAPI({ date1, date2 },status);
+    const res = await getListByDateWithStatusAPI({ date1, date2 }, status);
     setList(
       res.data.sort((a, b) => new Date(b.updateTime) - new Date(a.updateTime))
     );
@@ -56,9 +60,10 @@ const Article = () => {
       message.error("Please select date");
       return;
     }
-    console.log(status);
-    const data1 = `${date[0].year()}-${date[0].month() + 1}-${date[0].date()}`;
-    const data2 = `${date[1].year()}-${date[1].month() + 1}-${date[1].date()}`;
+    // console.log(status);
+    // const data1 = `${date[0].year()}-${date[0].month() + 1}-${date[0].date()}`;
+    const data1 = date[0].format("YYYY-MM-DD");
+    const data2 = date[1].format("YYYY-MM-DD");
     if (status == 2 || status == undefined) {
       getListByDate(data1, data2);
     } else {
