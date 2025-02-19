@@ -27,39 +27,56 @@ const { RangePicker } = DatePicker;
 const Article = () => {
   const [list, setList] = useState([]);
   useEffect(() => {
-    async function getList() {
-      const res = await getArticleAPI();
-      // console.log(res);
-      const sortedList = res.data.sort(
-        (a, b) => new Date(b.updateTime) - new Date(a.updateTime)
-      );
-
-      setList(res.data);
-    }
     getList();
   }, []);
 
   const getListByDate = async (date1, date2) => {
     const res = await getArticleByDateAPI({ date1, date2 });
     setList(
-      res.data.sort((a, b) => new Date(b.updateTime) - new Date(a.updateTime))
+      res.data.sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
     );
   };
 
   const getListByDateWithStatus = async (date1, date2, status) => {
     const res = await getListByDateWithStatusAPI({ date1, date2 }, status);
     setList(
-      res.data.sort((a, b) => new Date(b.updateTime) - new Date(a.updateTime))
+      res.data.sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
     );
   };
 
+  const getList = async () => {
+    const res = await getArticleAPI();
+    setList(
+      res.data.sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
+    );
+  };
+
+  const [clickStatus, setclickStatus] = useState(2);
+
   const onFinish = (formValue) => {
-    // console.log(formValue);
     const { date, status } = formValue;
     if (date == undefined) {
-      message.error("Please select date");
+      if (clickStatus === status) {
+        console.log("clickStatus2", clickStatus);
+        console.log("status2", status);
+        return;
+      }
+      if (status !== 2) {
+        const sortStatus = async () => {
+          const res = await getArticleAPI();
+          const list1 = res.data
+            .sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
+            .filter((item) => item.status === status);
+          setList(list1);
+        };
+        sortStatus();
+      } else {
+        getList();
+      }
+      setclickStatus(status);
       return;
     }
+
     // console.log(status);
     // const data1 = `${date[0].year()}-${date[0].month() + 1}-${date[0].date()}`;
     const data1 = date[0].format("YYYY-MM-DD");
@@ -104,17 +121,6 @@ const Article = () => {
       },
     },
   ];
-
-  // body data
-  // const data = [
-  //   {
-  //     id: "8218",
-  //     update_time: "2021-09-01 09:00:00",
-  //     create_time: "2021-09-01 09:00:00",
-  //     status: null,
-  //     title: "Article 1",
-  //   },
-  // ];
   return (
     <div>
       <Card
@@ -128,9 +134,13 @@ const Article = () => {
         }
         style={{ marginBottom: 20 }}
       >
-        <Form initialValues={{ status: 2 }} onFinish={onFinish}>
+        <Form
+          initialValues={{ status: 2 }}
+          onFinish={onFinish}
+          // onChange={onChange}
+        >
           <Form.Item label="Status" name="status">
-            <Radio.Group defaultValue={0}>
+            <Radio.Group>
               <Radio value={2}>All</Radio>
               <Radio value={0}>Draft</Radio>
               <Radio value={1}>Approved</Radio>
