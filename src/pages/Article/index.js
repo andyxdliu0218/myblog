@@ -51,14 +51,20 @@ const Article = () => {
     );
   };
 
-  const [clickStatus, setclickStatus] = useState(2);
+  const [preStatus, setpreStatus] = useState(2);
+  const [preDate1, setpreDate1] = useState(
+    new Date().toISOString().slice(0, 10)
+  );
+  const [preDate2, setpreDate2] = useState(
+    new Date().toISOString().slice(0, 10)
+  );
 
   const onFinish = (formValue) => {
     const { date, status } = formValue;
     if (date == undefined) {
-      if (clickStatus === status) {
-        console.log("clickStatus2", clickStatus);
-        console.log("status2", status);
+      if (preStatus === status) {
+        console.log("preStatus", preStatus);
+        console.log("status", status);
         return;
       }
       if (status !== 2) {
@@ -73,19 +79,23 @@ const Article = () => {
       } else {
         getList();
       }
-      setclickStatus(status);
+      setpreStatus(status);
       return;
     }
 
-    // console.log(status);
-    // const data1 = `${date[0].year()}-${date[0].month() + 1}-${date[0].date()}`;
     const data1 = date[0].format("YYYY-MM-DD");
     const data2 = date[1].format("YYYY-MM-DD");
+    if (preDate1 === data1 && preDate2 === data2 && preStatus === status) {
+      return;
+    }
     if (status == 2 || status == undefined) {
       getListByDate(data1, data2);
     } else {
       getListByDateWithStatus(data1, data2, status);
     }
+    setpreDate1(data1);
+    setpreDate2(data2);
+    setpreStatus(status);
   };
   const columns = [
     { title: "Title", dataIndex: "title" },
