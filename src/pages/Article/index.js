@@ -166,7 +166,12 @@ const Article = () => {
           </>
         }
       >
-        <Table rowKey="id" columns={columns} dataSource={list} />
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={list}
+          pagination={{ total: list.length, pageSize: 4 }}
+        />
       </Card>
 
       {/* <Space>Date:</Space> <DatePicker
