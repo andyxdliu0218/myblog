@@ -26,9 +26,12 @@ const { RangePicker } = DatePicker;
 
 const Article = () => {
   const [list, setList] = useState([]);
-  useEffect(() => {
-    getList();
-  }, []);
+
+  const [requestData, setRequestData] = useState({
+    status: 2,
+    date1: "",
+    date2: "",
+  });
 
   const getListByDate = async (date1, date2) => {
     const res = await getArticleByDateAPI({ date1, date2 });
@@ -44,58 +47,47 @@ const Article = () => {
     );
   };
 
-  const getList = async () => {
+  const getList = async (status) => {
     const res = await getArticleAPI();
-    setList(
-      res.data.sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
+    let list1 = res.data.sort(
+      (a, b) => new Date(b.createTime) - new Date(a.createTime)
     );
+    if (status !== 2) {
+      list1 = list1.filter((item) => item.status === status);
+    }
+    setList(list1);
   };
 
-  const [preStatus, setpreStatus] = useState(2);
-  const [preDate1, setpreDate1] = useState(
-    new Date().toISOString().slice(0, 10)
-  );
-  const [preDate2, setpreDate2] = useState(
-    new Date().toISOString().slice(0, 10)
-  );
-
-  const onFinish = (formValue) => {
-    const { date, status } = formValue;
-    if (date == undefined) {
-      if (preStatus === status) {
-        console.log("preStatus", preStatus);
-        console.log("status", status);
-        return;
-      }
-      if (status !== 2) {
-        const sortStatus = async () => {
-          const res = await getArticleAPI();
-          const list1 = res.data
-            .sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
-            .filter((item) => item.status === status);
-          setList(list1);
-        };
-        sortStatus();
-      } else {
-        getList();
-      }
-      setpreStatus(status);
-      return;
-    }
-
-    const data1 = date[0].format("YYYY-MM-DD");
-    const data2 = date[1].format("YYYY-MM-DD");
-    if (preDate1 === data1 && preDate2 === data2 && preStatus === status) {
-      return;
-    }
-    if (status == 2 || status == undefined) {
-      getListByDate(data1, data2);
+  useEffect(() => {
+    const { date1, date2, status } = requestData;
+    if (!date1 && !date2) {
+      getList(status);
+    } else if (date1 && date2 && status !== 2) {
+      getListByDateWithStatus(date1, date2, status);
     } else {
-      getListByDateWithStatus(data1, data2, status);
+      getListByDate(date1, date2);
     }
-    setpreDate1(data1);
-    setpreDate2(data2);
-    setpreStatus(status);
+  }, [requestData]);
+
+  const [preStatus, setPreStatus] = useState(2);
+  const [preDate1, setPreDate1] = useState("");
+  const [preDate2, setPreDate2] = useState("");
+
+  const onFinish = ({ date, status }) => {
+    const data1 = date ? date[0].format("YYYY-MM-DD") : "";
+    const data2 = date ? date[1].format("YYYY-MM-DD") : "";
+    if (preStatus === status && preDate1 === data1 && preDate2 === data2) {
+      return;
+    }
+    setRequestData({
+      status: status,
+      date1: data1,
+      date2: data2,
+    });
+    setPreStatus(status);
+    setPreDate1(data1);
+    setPreDate2(data2);
+    return;
   };
   const columns = [
     { title: "Title", dataIndex: "title" },
@@ -161,7 +153,7 @@ const Article = () => {
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" style={{ marginleft: 40 }}>
-              Select Date
+              Screening
             </Button>
           </Form.Item>
         </Form>
