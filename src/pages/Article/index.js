@@ -48,13 +48,11 @@ const Article = () => {
   };
 
   const getList = async (status) => {
-    const res = await getArticleAPI();
-    let list1 = res.data.sort(
+    console.log(status);
+    const res = await getArticleAPI({ status });
+    const list1 = res.data.sort(
       (a, b) => new Date(b.createTime) - new Date(a.createTime)
     );
-    if (status !== 2) {
-      list1 = list1.filter((item) => item.status === status);
-    }
     setList(list1);
   };
 
