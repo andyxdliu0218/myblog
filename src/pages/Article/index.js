@@ -31,39 +31,46 @@ const Article = () => {
     status: 2,
     date1: "",
     date2: "",
+    page: 1,
   });
 
-  const getListByDate = async (date1, date2) => {
-    const res = await getArticleByDateAPI({ date1, date2 });
+  const [count, setCount] = useState(0);
+
+  const getListByDate = async (date1, date2, page) => {
+    const res = await getArticleByDateAPI({ date1, date2, page });
+    setCount(res.dataCount);
     setList(
-      res.data.sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
+      res.data
+      // res.data.sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
     );
   };
 
-  const getListByDateWithStatus = async (date1, date2, status) => {
-    const res = await getListByDateWithStatusAPI({ date1, date2 }, status);
+  const getListByDateWithStatus = async (date1, date2, page, status) => {
+    const res = await getListByDateWithStatusAPI(
+      { date1, date2, page },
+      status
+    );
+    setCount(res.dataCount);
     setList(
-      res.data.sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
+      res.data
+      // res.data.sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
     );
   };
 
-  const getList = async (status) => {
-    console.log(status);
-    const res = await getArticleAPI({ status });
-    const list1 = res.data.sort(
-      (a, b) => new Date(b.createTime) - new Date(a.createTime)
-    );
-    setList(list1);
+  const getList = async (status, page) => {
+    const res = await getArticleAPI({ status, page });
+    setCount(res.dataCount);
+    setList(res.data);
   };
 
   useEffect(() => {
-    const { date1, date2, status } = requestData;
+    const { date1, date2, status, page } = requestData;
     if (!date1 && !date2) {
-      getList(status);
+      getList(status, page);
     } else if (date1 && date2 && status !== 2) {
-      getListByDateWithStatus(date1, date2, status);
+      getListByDateWithStatus(date1, date2, page, status);
     } else {
-      getListByDate(date1, date2);
+      getListByDate(date1, date2, page);
     }
   }, [requestData]);
 
@@ -81,11 +88,19 @@ const Article = () => {
       status: status,
       date1: data1,
       date2: data2,
+      page: 1,
     });
     setPreStatus(status);
     setPreDate1(data1);
     setPreDate2(data2);
     return;
+  };
+
+  const onPageChange = (page) => {
+    setRequestData({
+      ...requestData,
+      page,
+    });
   };
   const columns = [
     { title: "Title", dataIndex: "title" },
@@ -151,7 +166,7 @@ const Article = () => {
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" style={{ marginleft: 40 }}>
-              Screening
+              Search
             </Button>
           </Form.Item>
         </Form>
@@ -160,7 +175,7 @@ const Article = () => {
         title={
           <>
             Based on the filtering criteria,{" "}
-            <Tag color="#108ee9">{list.length}</Tag>results have been found
+            <Tag color="#108ee9"> {count} </Tag>results have been found
           </>
         }
       >
@@ -168,7 +183,12 @@ const Article = () => {
           rowKey="id"
           columns={columns}
           dataSource={list}
-          pagination={{ total: list.length, pageSize: 4 }}
+          pagination={{
+            total: count,
+            pageSize: 4,
+            onChange: onPageChange,
+            current: requestData.page,
+          }}
         />
       </Card>
 
