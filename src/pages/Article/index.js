@@ -10,6 +10,7 @@ import {
   DatePicker,
   Select,
   message,
+  Popconfirm,
 } from "antd";
 
 import { Table, Tag, Space } from "antd";
@@ -19,6 +20,7 @@ import {
   getArticleAPI,
   getArticleByDateAPI,
   getListByDateWithStatusAPI,
+  deleteArticleAPI,
 } from "@/apis/article";
 
 const { Option } = Select;
@@ -102,6 +104,14 @@ const Article = () => {
       page,
     });
   };
+
+  const onDeleteConfirm = async (data) => {
+    await deleteArticleAPI(data.userId, data.id);
+
+    setRequestData({
+      ...requestData,
+    });
+  };
   const columns = [
     { title: "Title", dataIndex: "title" },
     {
@@ -125,12 +135,24 @@ const Article = () => {
         return (
           <Space size="middle">
             <Button type="primary" shape="circle" icon={<EditOutlined />} />
-            <Button
-              type="primary"
-              danger
-              shape="circle"
-              icon={<DeleteOutlined />}
-            />
+
+            <Popconfirm
+              title="Delete this blog"
+              description="Are you sure to delete this blog?"
+              onConfirm={() => {
+                onDeleteConfirm(data);
+              }}
+              // onCancel={onDeleteCancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
           </Space>
         );
       },
