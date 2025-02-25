@@ -39,3 +39,10 @@ export function deleteArticleAPI(userId, blogId) {
     url: `/blog/${userId}/${blogId}`,
   });
 }
+
+export function getArticleById(id) {
+  return req({
+    method: "GET",
+    url: `/blog/${id}`,
+  });
+}

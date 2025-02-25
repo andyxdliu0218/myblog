@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getToken, removeToken } from "./token";
 import router from "@/router";
-import { loginUrl, baseURL } from "./url";
+import { baseURL } from "./url";
 
 // create axios instance
 
@@ -35,7 +35,7 @@ req.interceptors.response.use(
       // 1. clear token
       // 2.redirect to login page
       removeToken();
-      router.navigate(loginUrl);
+      router.navigate("/login");
       alert("Please login again.");
       window.location.reload();
       response.data.data = { nickname: "" };

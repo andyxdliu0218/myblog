@@ -11,17 +11,17 @@ import {
   message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import "./index.scss";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { createArticleAPI } from "@/apis/article";
-import { useState } from "react";
+import { createArticleAPI, getArticleById } from "@/apis/article";
+import { useEffect, useState } from "react";
+import { useForm } from "antd/es/form/Form";
 
 const { Option } = Select;
 
 const Publish = () => {
-  const [form] = Form.useForm();
   // const [imageType, setImageType] = useState(0);
 
   // const onChange = (e) => {
@@ -48,6 +48,24 @@ const Publish = () => {
       console.log(res);
     }
   };
+  const [searchParams] = useSearchParams();
+  const blogId = searchParams.get("id");
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    // get id from url
+    console.log(blogId);
+    // use id to get data from backend
+    async function getArticleDetail() {
+      const res = await getArticleById(blogId);
+      console.log(res.data);
+      form.setFieldsValue(res.data);
+    }
+    if (blogId != null) {
+      getArticleDetail();
+    }
+  }, [blogId, form]);
 
   return (
     <div className="publish">
