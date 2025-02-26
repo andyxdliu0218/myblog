@@ -15,7 +15,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import "./index.scss";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { createArticleAPI, getArticleById } from "@/apis/article";
+import { createArticleAPI, getArticleById, updateArticleAPI } from "@/apis/article";
 import { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
 
@@ -33,8 +33,25 @@ const Publish = () => {
   //   console.log(formValue);
   // };
 
+  const [searchParams] = useSearchParams();
+  const blogId = searchParams.get("id");
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    // get id from url
+    // console.log(blogId);
+    // use id to get data from backend
+    async function getArticleDetail() {
+      const res = await getArticleById(blogId);
+      form.setFieldsValue(res.data);
+    }
+    if (blogId) {
+      getArticleDetail();
+    }
+  }, [blogId, form]);
+
   const onFinish = async (formValue) => {
-    console.log(formValue);
     if (
       !formValue.content ||
       formValue.content.trim() === "" ||
@@ -43,29 +60,15 @@ const Publish = () => {
       form.resetFields();
       return;
     } else {
-      const res = await createArticleAPI(formValue);
-      message.success("Successfully Created Blog");
-      console.log(res);
+      if (blogId) {
+        const res = await updateArticleAPI(formValue,blogId)
+        message.success("Successfully Updated Blog");
+      } else {
+        const res = await createArticleAPI(formValue);
+        message.success("Successfully Created Blog");
+      }
     }
   };
-  const [searchParams] = useSearchParams();
-  const blogId = searchParams.get("id");
-
-  const [form] = Form.useForm();
-
-  useEffect(() => {
-    // get id from url
-    console.log(blogId);
-    // use id to get data from backend
-    async function getArticleDetail() {
-      const res = await getArticleById(blogId);
-      console.log(res.data);
-      form.setFieldsValue(res.data);
-    }
-    if (blogId != null) {
-      getArticleDetail();
-    }
-  }, [blogId, form]);
 
   return (
     <div className="publish">
@@ -74,7 +77,7 @@ const Publish = () => {
           <Breadcrumb
             items={[
               { title: <Link to={"/"}>Home</Link> },
-              { title: "Post Article" },
+              { title: `${blogId ? "Edit" : "Post"} Blog` },
             ]}
           />
         }
@@ -127,7 +130,7 @@ const Publish = () => {
           <Form.Item wrapperCol={{ offset: 4 }}>
             <Space>
               <Button type="primary" htmlType="submit">
-                Submit
+                {blogId ? "Update" : "Submit"}
               </Button>
               <Button htmlType="reset">Reset</Button>
             </Space>

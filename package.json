@@ -4,9 +4,10 @@
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",
-    "antd": "^5.22.4",
+    "antd": "^5.24.2",
     "axios": "^1.7.9",
     "cra-template": "1.2.0",
+    "html-react-parser": "^5.2.2",
     "normalize.css": "^8.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

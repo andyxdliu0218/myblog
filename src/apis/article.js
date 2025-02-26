@@ -9,6 +9,14 @@ export function createArticleAPI(formData) {
   });
 }
 
+export function updateArticleAPI(formData,id) {
+  return req({
+    method: "PUT",
+    url: `blog/${id}`,
+    data: formData,
+  });
+}
+
 export function getArticleAPI(params) {
   return req({
     method: "GET",

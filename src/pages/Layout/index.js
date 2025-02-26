@@ -115,7 +115,7 @@ const GeekLayout = () => {
             style={{ height: "100%", borderRight: 0 }}
           ></Menu>
         </Sider>
-        <Layout className="layout-content" style={{ padding: 20 }}>
+        <Layout className="layout-content" style={{ padding: 10 }}>
           <Outlet />
         </Layout>
       </Layout>
