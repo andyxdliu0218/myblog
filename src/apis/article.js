@@ -17,6 +17,15 @@ export function updateArticleAPI(formData,id) {
   });
 }
 
+export function getAllArticleAPI(params) {
+  return req({
+    method: "GET",
+    url: "blog",
+    params,
+  });
+}
+
+
 export function getArticleAPI(params) {
   return req({
     method: "GET",
