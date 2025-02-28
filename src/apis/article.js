@@ -17,6 +17,13 @@ export function updateArticleAPI(formData,id) {
   });
 }
 
+export function updateArticleStatusAPI(blogId,status) {
+  return req({
+    method: "PUT",
+    url: `blog/${blogId}/${status}`,
+  });
+}
+
 export function getAllArticleAPI(params) {
   return req({
     method: "GET",

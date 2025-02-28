@@ -14,13 +14,18 @@ import {
 } from "antd";
 
 import { Table, Tag, Space } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  QuestionCircleFilled,
+} from "@ant-design/icons";
 import img404 from "@/assets/error.png";
 import {
   getArticleAPI,
   getArticleByDateAPI,
   getListByDateWithStatusAPI,
   deleteArticleAPI,
+  updateArticleStatusAPI,
 } from "@/apis/article";
 
 const { Option } = Select;
@@ -113,6 +118,26 @@ const Article = () => {
       ...requestData,
     });
   };
+  const onApproveStatus = async (data) => {
+    if (data.status === 1) {
+      return;
+    }
+    await updateArticleStatusAPI(data.id, 1);
+
+    setRequestData({
+      ...requestData,
+    });
+  };
+  const onChangeToPendingStatus = async (data) => {
+    if (data.status === 0) {
+      return;
+    }
+    await updateArticleStatusAPI(data.id, 0);
+
+    setRequestData({
+      ...requestData,
+    });
+  };
   const columns = [
     { title: "Title", dataIndex: "title" },
     {
@@ -135,7 +160,14 @@ const Article = () => {
       render: (data) => {
         return (
           <Space size="middle">
-            <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={()=> {navigate(`/publish?id=${data.id}`)}}/>
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={() => {
+                navigate(`/publish?id=${data.id}`);
+              }}
+            />
 
             <Popconfirm
               title="Delete this blog"
@@ -143,7 +175,7 @@ const Article = () => {
               onConfirm={() => {
                 onDeleteConfirm(data);
               }}
-              // onCancel={onDeleteCancel}
+              // onCancel={onDeleteChange}
               okText="Yes"
               cancelText="No"
             >
@@ -152,6 +184,25 @@ const Article = () => {
                 danger
                 shape="circle"
                 icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
+
+            <Popconfirm
+              title="Change Status"
+              description="Are you sure to switch its blog status?"
+              onConfirm={() => {
+                onApproveStatus(data);
+              }}
+              onCancel={() => {
+                onChangeToPendingStatus(data);
+              }}
+              okText="Approve this blog"
+              cancelText="Pending review"
+            >
+              <Button
+                type="dashed"
+                shape="circle"
+                icon={<QuestionCircleFilled />}
               />
             </Popconfirm>
           </Space>
