@@ -3,9 +3,14 @@ import Login from "@/pages/Login";
 import { AuthRoute } from "@/components/AuthRoute";
 
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import Home from "@/pages/Home";
-import Publish from "@/pages/Publish";
-import Article from "@/pages/Article";
+import { React, lazy, Suspense } from "react";
+// import Home from "@/pages/Home";
+// import Publish from "@/pages/Publish";
+// import Article from "@/pages/Article";
+
+const Home = lazy(() => import("@/pages/Home"));
+const Publish = lazy(() => import("@/pages/Publish"));
+const Article = lazy(() => import("@/pages/Article"));
 
 const router = createBrowserRouter([
   {
@@ -17,20 +22,32 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "home",
-        element: <Home />,
+        index: true,
+        element: (
+          <Suspense fallback={"loading"}>
+            <Home />
+          </Suspense>
+        ),
       },
       {
         path: "article",
-        element: <Article />,
+        element: (
+          <Suspense fallback={"loading"}>
+            <Article />
+          </Suspense>
+        ),
       },
       {
         path: "publish",
-        element: <Publish />,
+        element: (
+          <Suspense fallback={"loading"}>
+            <Publish />
+          </Suspense>
+        ),
       },
       {
         path: "*", // Catch-all for unmatched routes
-        element: <Navigate to="/home" />,
+        element: <Navigate to="/" />,
       },
     ],
   },
