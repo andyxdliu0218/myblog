@@ -1,52 +1,77 @@
 .blog-container {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 20px;
-}
-
-.blog-title {
   text-align: center;
-  color: #333;
-}
-
-.blog-card {
-  width: 100%;
-  padding: 10px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
-  background: linear-gradient(135deg, #f9f9f9, #ffffff);
-  border-left: 5px solid #1677ff;
-
-  &:hover {
-    transform: translateY(-3px);
-  }
+  padding: 40px 20px;
+  background-color: #f5f5f5; // Light background for contrast
 }
 
 .blog-header {
+  font-size: 36px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  .icon {
+    font-size: 40px;
+  }
 }
 
-.blog-title-text {
-  font-size: 20px;
-  color: #1677ff;
+.blog-list {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-.blog-content {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #f5f5f5;
-  border-radius: 6px;
+.blog-item {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: 180px; // Ensure blogs have uniform height
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.blog-title {
+  font-size: 22px;
+  color: #333;
+  font-weight: bold;
+}
+
+.read-more {
   font-size: 16px;
+  color: #3b4bdd;
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover {
+    color: #c0392b;
+  }
 }
 
-.blog-footer {
-  margin-top: 12px;
-  font-size: 14px;
-  text-align: right;
-}
-.list-item{
-    width: 100%;
+.blog-pagination {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+
+  .ant-pagination-item {
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
+  .ant-pagination-item-active {
+    // background-color: #5cd472;
+    color: white;
+    border-color: #3cc5e7;
+  }
+
+  .blog-footer {
+    display: flex;
+    justify-content: space-between;
+    // align-items: center;
+    bottom: 15px;
+    right: 15px;
+  }
 }
