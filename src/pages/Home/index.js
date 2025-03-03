@@ -19,6 +19,7 @@ import "./index.scss"; // Import SCSS for custom styling
 import { useNavigate, Link } from "react-router-dom";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { getAllArticleAPI } from "@/apis/article";
+import { useSelector } from "react-redux";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -43,7 +44,10 @@ export default function Home() {
       }
     };
     fetchArticles();
+    // console.log(userInfo)
   }, [page]);
+
+  const userInfo = useSelector((state) => state.user.userInfo);
 
   return (
     <div className="blog-container">
@@ -80,14 +84,16 @@ export default function Home() {
                     <br />
 
                     <Space size={"middle"} className="blog-footer">
-                      <Button
-                        type="primary"
-                        shape="circle"
-                        icon={<EditOutlined />}
-                        onClick={() => {
-                          navigate(`/publish?id=${2}`);
-                        }}
-                      />
+                      {blog.userId === userInfo.id && (
+                        <Button
+                          type="primary"
+                          shape="circle"
+                          icon={<EditOutlined />}
+                          onClick={() => {
+                            navigate(`/publish?id=${2}`);
+                          }}
+                        />
+                      )}
                       <Text
                         className="read-more"
                         onClick={() => navigate(`/blog/${blog.id}`)}

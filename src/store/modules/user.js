@@ -39,39 +39,50 @@ const { setToken, setUserInfo, clearUserInfo } = userStore.actions;
 // get reducer function
 const userReducer = userStore.reducer;
 
-// async method to retrieve token
-
+// Async function to handle login
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
-    // 1. request for token
-    const res = await loginAPI(loginForm);
-    // console.log(res);
-    if (res.code === "200") {
-      // 2. store token
-      dispatch(setToken(res.data.token));
-      return true;
-    } else {
+    try {
+      const res = await loginAPI(loginForm);
+      if (res.code === "200") {
+        dispatch(setToken(res.data.token));
+        dispatch(setUserInfo(res.data));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Login failed:", error);
       return false;
     }
   };
 };
 
-// aysnc method to get user information
+// Async function to get user info
 const fetchUserInfo = () => {
   return async (dispatch) => {
-    const res = await getProfileAPI();
-
-    dispatch(setUserInfo(res.data));
+    try {
+      const res = await getProfileAPI();
+      dispatch(setUserInfo(res.data));
+    } catch (error) {
+      console.error("Fetching user info failed:", error);
+    }
   };
 };
 
+// Async function to verify token
 const verifyToken = () => {
-  return async () => {
-    const res = await verifyTokenAPI();
-    if (res.code === "200") {
-      return true;
-    } else {
-      removeToken();
+  return async (dispatch) => {
+    try {
+      const res = await verifyTokenAPI();
+      if (res.code === "200") {
+        return true;
+      } else {
+        dispatch(clearUserInfo()); // Clear Redux state when the token is invalid
+        return false;
+      }
+    } catch (error) {
+      console.error("Token verification failed:", error);
+      dispatch(clearUserInfo()); // Handle errors by clearing user state
       return false;
     }
   };
