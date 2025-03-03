@@ -27,6 +27,7 @@ import {
   deleteArticleAPI,
   updateArticleStatusAPI,
 } from "@/apis/article";
+import { useSelector } from "react-redux";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -71,6 +72,7 @@ const Article = () => {
     setList(res.data);
   };
 
+  const userInfo = useSelector((state) => state.user.userInfo);
   useEffect(() => {
     const { date1, date2, status, page } = requestData;
     if (!date1 && !date2) {
@@ -80,6 +82,7 @@ const Article = () => {
     } else {
       getListByDate(date1, date2, page);
     }
+    // console.log(userInfo);
   }, [requestData]);
 
   const [preStatus, setPreStatus] = useState(2);
