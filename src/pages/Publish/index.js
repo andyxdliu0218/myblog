@@ -15,19 +15,21 @@ import { Link, useSearchParams } from "react-router-dom";
 import "./index.scss";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { createArticleAPI, getArticleById, updateArticleAPI } from "@/apis/article";
-import { useEffect, useState } from "react";
+import {
+  createArticleAPI,
+  getArticleById,
+  updateArticleAPI,
+  getChannelListAPI,
+} from "@/apis/article";
+import { use, useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
 
 const { Option } = Select;
 
 const Publish = () => {
-  // const [imageType, setImageType] = useState(0);
-
-  // const onChange = (e) => {
-  //   console.log(e.target.value);
-  //   setImageType(e.target.value);
-  // };
+  const [imageType, setImageType] = useState(0);
+  const [imageList, setImageList] = useState([]);
+  const [channellist, setChannellist] = useState([]);
 
   // const onFinish = (formValue) => {
   //   console.log(formValue);
@@ -37,6 +39,14 @@ const Publish = () => {
   const blogId = searchParams.get("id");
 
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    async function getChannelList() {
+      const res = await getChannelListAPI();
+      setChannellist(res.data);
+    }
+    getChannelList();
+  }, []);
 
   useEffect(() => {
     // get id from url
@@ -61,11 +71,12 @@ const Publish = () => {
       return;
     } else {
       if (blogId) {
-        const res = await updateArticleAPI(formValue,blogId)
+        const res = await updateArticleAPI(formValue, blogId);
         message.success("Successfully Updated Blog");
       } else {
-        const res = await createArticleAPI(formValue);
-        message.success("Successfully Created Blog");
+        console.log(formValue);
+        // const res = await createArticleAPI(formValue);
+        // message.success("Successfully Created Blog");
       }
     }
   };
@@ -96,24 +107,48 @@ const Publish = () => {
           >
             <Input placeholder="Please input title" style={{ width: 400 }} />
           </Form.Item>
+          <Form.Item label="Channel" name="channel" required>
+            <Select
+              placeholder="Please select a channel"
+              style={{ width: 200 }}
+            >
+              {channellist.map((item) => {
+                return (
+                  <Option key={item.id} value={item.id}>
+                    {item.name}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
 
-          {/* <Form.Item label="Cover">
+          <Form.Item label="Cover">
             <Form.Item name="type">
-              <Radio.Group onChange={onChange}>
-                <Radio value={0}>Type 0</Radio>
-                <Radio value={1}>Type 1</Radio>
-                <Radio value={2}>Type 2</Radio>
+              <Radio.Group onChange={(e) => setImageType(e.target.value)}>
+                <Radio value={1}>One Picture</Radio>
+                <Radio value={2}>Two Pictures</Radio>
+                <Radio value={0}>No picture</Radio>
               </Radio.Group>
             </Form.Item>
 
             {imageType > 0 && (
-              <Upload listType="picture-card" showUploadList={true}>
+              <Upload
+                name="image"
+                listType="picture-card"
+                showUploadList
+                action={"http://localhost:8080/image/upload"}
+                onChange={(value) => {
+                  setImageList(value.fileList);
+                  console.log(value.fileList);
+                }}
+                maxCount={imageType}
+              >
                 <div style={{ marginTop: 8 }}>
                   <PlusOutlined />
                 </div>
               </Upload>
             )}
-          </Form.Item> */}
+          </Form.Item>
 
           <Form.Item
             label="Content"

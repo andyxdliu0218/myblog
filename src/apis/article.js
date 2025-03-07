@@ -70,3 +70,10 @@ export function getArticleById(id) {
     url: `/blog/${id}`,
   });
 }
+
+export function getChannelListAPI() {
+  return req({
+    method: "GET",
+    url: `/blog/channel`,
+  });
+}
