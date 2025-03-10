@@ -62,6 +62,18 @@ const Publish = () => {
   }, [blogId, form]);
 
   const onFinish = async (formValue) => {
+    const { title, channel, content, imageType } = formValue;
+    const reqData = {
+      title: title,
+      content: content,
+      cover: {
+        imageType: imageType,
+        urls: imageList.map((item) => item.response.data),
+      },
+
+      channel: channel,
+    };
+
     if (
       !formValue.content ||
       formValue.content.trim() === "" ||
@@ -74,9 +86,10 @@ const Publish = () => {
         const res = await updateArticleAPI(formValue, blogId);
         message.success("Successfully Updated Blog");
       } else {
-        console.log(formValue);
-        // const res = await createArticleAPI(formValue);
-        // message.success("Successfully Created Blog");
+        // console.log(reqData);
+        const res = await createArticleAPI(reqData);
+        message.success("Successfully Created Blog");
+        form.resetFields();
       }
     }
   };
@@ -123,7 +136,7 @@ const Publish = () => {
           </Form.Item>
 
           <Form.Item label="Cover">
-            <Form.Item name="type">
+            <Form.Item name="imageType">
               <Radio.Group onChange={(e) => setImageType(e.target.value)}>
                 <Radio value={1}>One Picture</Radio>
                 <Radio value={2}>Two Pictures</Radio>
@@ -139,7 +152,6 @@ const Publish = () => {
                 action={"http://localhost:8080/image/upload"}
                 onChange={(value) => {
                   setImageList(value.fileList);
-                  console.log(value.fileList);
                 }}
                 maxCount={imageType}
               >

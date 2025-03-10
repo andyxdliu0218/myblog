@@ -143,6 +143,7 @@ const Article = () => {
   };
   const columns = [
     { title: "Title", dataIndex: "title" },
+    { title: "Channel", dataIndex: "channel" },
     {
       title: "Status",
       dataIndex: "status",
