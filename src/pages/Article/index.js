@@ -73,7 +73,7 @@ const Article = () => {
     const res = await getArticleAPI({ status, page });
     setCount(res.dataCount);
     setList(res.data);
-    console.log(res.data);
+    // console.log(res.data);
   };
 
   const userInfo = useSelector((state) => state.user.userInfo);

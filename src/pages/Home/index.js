@@ -20,6 +20,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { getAllArticleAPI } from "@/apis/article";
 import { useSelector } from "react-redux";
+import img404 from "@/assets/error.png";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -78,6 +79,16 @@ export default function Home() {
                       )}
                     </Space>
                     <br />
+
+                    <img
+                      src={
+                        (blog.cover.urls != null && blog.cover.urls[0]) ||
+                        img404
+                      }
+                      width={80}
+                      height={60}
+                      alt="cover"
+                    />
 
                     <Text>{parse(blog.content.slice(0, 10) + " ......")}</Text>
                     {blog.createTime}
