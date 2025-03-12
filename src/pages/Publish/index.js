@@ -19,34 +19,31 @@ import {
   createArticleAPI,
   getArticleById,
   updateArticleAPI,
-  getChannelListAPI,
 } from "@/apis/article";
-import { use, useEffect, useState } from "react";
-import { useForm } from "antd/es/form/Form";
+import { useEffect, useState } from "react";
+import { useChannel } from "@/hooks/useChannel";
 
 const { Option } = Select;
 
 const Publish = () => {
   const [imageType, setImageType] = useState(0);
   const [imageList, setImageList] = useState([]);
-  const [channellist, setChannellist] = useState([]);
-
-  // const onFinish = (formValue) => {
-  //   console.log(formValue);
-  // };
 
   const [searchParams] = useSearchParams();
   const blogId = searchParams.get("id");
 
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    async function getChannelList() {
-      const res = await getChannelListAPI();
-      setChannellist(res.data);
-    }
-    getChannelList();
-  }, []);
+  // const [channellist, setChannellist] = useState([]);
+  // useEffect(() => {
+  //   async function getChannelList() {
+  //     const res = await getChannelListAPI();
+  //     setChannellist(res.data);
+  //   }
+  //   getChannelList();
+  // }, []);
+
+  const { channellist } = useChannel();
 
   useEffect(() => {
     // get id from url
@@ -62,6 +59,9 @@ const Publish = () => {
   }, [blogId, form]);
 
   const onFinish = async (formValue) => {
+    //verify imageType and imagelist length
+    if (imageType > 0 && imageList.length !== imageType)
+      return message.warning("Please upload the correct number of images");
     const { title, channel, content, imageType } = formValue;
     const reqData = {
       title: title,

@@ -28,11 +28,14 @@ import {
   updateArticleStatusAPI,
 } from "@/apis/article";
 import { useSelector } from "react-redux";
+import { useChannel } from "@/hooks/useChannel";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 const Article = () => {
+  const { channellist } = useChannel();
+
   const navigate = useNavigate();
   const [list, setList] = useState([]);
 
@@ -70,6 +73,7 @@ const Article = () => {
     const res = await getArticleAPI({ status, page });
     setCount(res.dataCount);
     setList(res.data);
+    console.log(res.data);
   };
 
   const userInfo = useSelector((state) => state.user.userInfo);
@@ -142,8 +146,22 @@ const Article = () => {
     });
   };
   const columns = [
+    {
+      title: "Cover",
+      dataIndex: "cover",
+      width: 120,
+      render: (cover) => {
+        return (
+          <img
+            src={(cover.urls != null && cover.urls[0]) || img404}
+            width={80}
+            height={60}
+            alt="cover"
+          />
+        );
+      },
+    },
     { title: "Title", dataIndex: "title" },
-    { title: "Channel", dataIndex: "channel" },
     {
       title: "Status",
       dataIndex: "status",
@@ -238,6 +256,21 @@ const Article = () => {
               <Radio value={0}>Draft</Radio>
               <Radio value={1}>Approved</Radio>
             </Radio.Group>
+          </Form.Item>
+          <Form.Item label="Channel" name="channel">
+            <Select
+              placeholder="Please select a channel"
+              style={{ width: 200 }}
+              // defaultValue={channellist[0].name}
+            >
+              {channellist.map((item) => {
+                return (
+                  <Option key={item.id} value={item.id}>
+                    {item.name}
+                  </Option>
+                );
+              })}
+            </Select>
           </Form.Item>
           <Form.Item label="Date" name="date">
             <RangePicker />
