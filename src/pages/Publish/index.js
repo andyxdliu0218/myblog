@@ -62,7 +62,7 @@ const Publish = () => {
     //verify imageType and imagelist length
     if (imageType > 0 && imageList.length !== imageType)
       return message.warning("Please upload the correct number of images");
-    const { title, channel, content, imageType } = formValue;
+    const { title, channel, content } = formValue;
     const reqData = {
       title: title,
       content: content,
@@ -124,6 +124,7 @@ const Publish = () => {
             <Select
               placeholder="Please select a channel"
               style={{ width: 200 }}
+              defaultValue={4}
             >
               {channellist.map((item) => {
                 return (
@@ -137,7 +138,10 @@ const Publish = () => {
 
           <Form.Item label="Cover">
             <Form.Item name="imageType">
-              <Radio.Group onChange={(e) => setImageType(e.target.value)}>
+              <Radio.Group
+                onChange={(e) => setImageType(e.target.value)}
+                defaultValue={0}
+              >
                 <Radio value={1}>One Picture</Radio>
                 <Radio value={2}>Two Pictures</Radio>
                 <Radio value={0}>No picture</Radio>
