@@ -44,12 +44,13 @@ const Article = () => {
     date1: "",
     date2: "",
     page: 1,
+    channel: 0,
   });
 
   const [count, setCount] = useState(0);
 
-  const getListByDate = async (date1, date2, page) => {
-    const res = await getArticleByDateAPI({ date1, date2, page });
+  const getListByDate = async (date1, date2, page, channel) => {
+    const res = await getArticleByDateAPI({ date1, date2, page, channel });
     setCount(res.dataCount);
     setList(
       res.data
@@ -57,9 +58,15 @@ const Article = () => {
     );
   };
 
-  const getListByDateWithStatus = async (date1, date2, page, status) => {
+  const getListByDateWithStatus = async (
+    date1,
+    date2,
+    page,
+    status,
+    channel
+  ) => {
     const res = await getListByDateWithStatusAPI(
-      { date1, date2, page },
+      { date1, date2, page, channel },
       status
     );
     setCount(res.dataCount);
@@ -69,22 +76,23 @@ const Article = () => {
     );
   };
 
-  const getList = async (status, page) => {
-    const res = await getArticleAPI({ status, page });
+  const getList = async (status, page, channel) => {
+    const res = await getArticleAPI({ status, page, channel });
     setCount(res.dataCount);
     setList(res.data);
     // console.log(res.data);
   };
 
   const userInfo = useSelector((state) => state.user.userInfo);
+
   useEffect(() => {
-    const { date1, date2, status, page } = requestData;
+    const { date1, date2, status, page, channel } = requestData;
     if (!date1 && !date2) {
-      getList(status, page);
+      getList(status, page, channel);
     } else if (date1 && date2 && status !== 2) {
-      getListByDateWithStatus(date1, date2, page, status);
+      getListByDateWithStatus(date1, date2, page, status, channel);
     } else {
-      getListByDate(date1, date2, page);
+      getListByDate(date1, date2, page, channel);
     }
     // console.log(userInfo);
   }, [requestData]);
@@ -92,22 +100,34 @@ const Article = () => {
   const [preStatus, setPreStatus] = useState(2);
   const [preDate1, setPreDate1] = useState("");
   const [preDate2, setPreDate2] = useState("");
+  const [preChannel, setPreChannel] = useState(0);
 
-  const onFinish = ({ date, status }) => {
+  const onFinish = ({ date, status, channel }) => {
     const data1 = date ? date[0].format("YYYY-MM-DD") : "";
     const data2 = date ? date[1].format("YYYY-MM-DD") : "";
-    if (preStatus === status && preDate1 === data1 && preDate2 === data2) {
+    if (!channel) {
+      channel = 0;
+    }
+    if (
+      preStatus === status &&
+      preDate1 === data1 &&
+      preDate2 === data2 &&
+      preChannel === channel
+    ) {
       return;
     }
     setRequestData({
       status: status,
       date1: data1,
       date2: data2,
+      channel: channel,
       page: 1,
     });
     setPreStatus(status);
     setPreDate1(data1);
     setPreDate2(data2);
+    setPreChannel(channel);
+    console.log(data1, data2, status, channel);
     return;
   };
 
@@ -261,7 +281,6 @@ const Article = () => {
             <Select
               placeholder="Please select a channel"
               style={{ width: 200 }}
-              // defaultValue={channellist[0].name}
             >
               {channellist.map((item) => {
                 return (

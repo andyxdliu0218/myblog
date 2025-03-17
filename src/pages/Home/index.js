@@ -11,6 +11,8 @@ import {
   Layout,
   Col,
   Row,
+  Radio,
+  Menu,
   Pagination,
 } from "antd";
 import parse from "html-react-parser";
@@ -18,7 +20,7 @@ import dayjs from "dayjs";
 import "./index.scss"; // Import SCSS for custom styling
 import { useNavigate, Link } from "react-router-dom";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { getAllArticleAPI } from "@/apis/article";
+import { getAllArticleAPI, getChannelListAPI } from "@/apis/article";
 import { useSelector } from "react-redux";
 import img404 from "@/assets/error.png";
 
@@ -33,11 +35,30 @@ export default function Home() {
   const [count, setCount] = useState(2);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(1);
+  const [channel, setChannel] = useState(0);
+
+  const [isloading, setIsloading] = useState(true);
+
+  const [channelList, setChannelList] = useState([]);
+
+  useEffect(() => {
+    async function getChannelList() {
+      try {
+        const res = await getChannelListAPI();
+        setChannelList(res.data);
+      } catch (error) {
+        console.error("Error fetching channel list:", error);
+      } finally {
+        setIsloading(false);
+      }
+    }
+    getChannelList();
+  }, []);
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await getAllArticleAPI({ page });
+        const res = await getAllArticleAPI({ page, channel });
         setCount(res.dataCount);
         setList(res.data);
       } catch (error) {
@@ -46,22 +67,51 @@ export default function Home() {
     };
     fetchArticles();
     // console.log(userInfo)
-  }, [page]);
+  }, [page, channel]);
+
+  const items = [
+    { key: "0", label: "All" }, // Default "All" option
+    ...channelList.map((channel) => ({
+      key: channel.id.toString(), // Ensure keys are strings
+      label: channel.name,
+    })),
+  ];
 
   const userInfo = useSelector((state) => state.user.userInfo);
 
   return (
     <div className="blog-container">
       <Layout>
-        <Card
-          title={
+        {isloading ? (
+          ""
+        ) : (
+          <Card>
             <Breadcrumb
-              items={[{ title: <Tag color="yellow">Home Page</Tag> }]}
+              items={[
+                { title: <Tag color="yellow">Home Page</Tag> },
+                { title: "Blogs" },
+              ]}
+              style={{
+                marginBottom: 20,
+              }}
             />
-          }
-          style={{ marginBottom: 20 }}
-        >
-          <Content>
+            <div style={{ textAlign: "left" }}>
+              <Menu
+                mode="horizontal"
+                selectedKeys={[channel.toString()]}
+                onClick={(e) => setChannel(e.key)}
+                items={items}
+                style={{
+                  width: "auto",
+                  minWidth: "200px", // Aligns items to the left
+                }}
+              />
+            </div>
+          </Card>
+        )}
+
+        <Card>
+          <Content style={{ direction: "ltr" }}>
             <Title level={1} className="blog-header">
               <span className="icon"></span> Blogs
             </Title>
@@ -81,12 +131,9 @@ export default function Home() {
                     <br />
 
                     <img
-                      src={
-                        (blog.cover.urls != null && blog.cover.urls[0]) ||
-                        img404
-                      }
-                      width={80}
-                      height={60}
+                      src={blog.cover?.urls?.[0] || img404}
+                      width={120}
+                      height={80}
                       alt="cover"
                     />
 
