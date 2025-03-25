@@ -27,12 +27,12 @@ const items = [
     icon: <HomeOutlined />,
   },
   {
-    label: "Blog Management",
+    label: "Article Management",
     key: "/article",
     icon: <DiffOutlined />,
   },
   {
-    label: "Create Blog",
+    label: "Create Article",
     key: "/publish",
     icon: <EditOutlined />,
   },

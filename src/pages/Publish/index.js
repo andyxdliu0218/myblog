@@ -51,7 +51,20 @@ const Publish = () => {
     // use id to get data from backend
     async function getArticleDetail() {
       const res = await getArticleById(blogId);
-      form.setFieldsValue(res.data);
+      const data = res.data;
+      form.setFieldsValue({
+        ...data,
+        imageType: data.cover.urls.length,
+      });
+      setImageType(data.cover.urls.length);
+
+      setImageList(
+        data.cover.urls.map((url) => {
+          return {
+            url,
+          };
+        })
+      );
     }
     if (blogId) {
       getArticleDetail();
@@ -158,6 +171,7 @@ const Publish = () => {
                   setImageList(value.fileList);
                 }}
                 maxCount={imageType}
+                fileList={imageList}
               >
                 <div style={{ marginTop: 8 }}>
                   <PlusOutlined />

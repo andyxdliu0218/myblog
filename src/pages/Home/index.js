@@ -89,7 +89,7 @@ export default function Home() {
             <Breadcrumb
               items={[
                 { title: <Tag color="yellow">Home Page</Tag> },
-                { title: "Blogs" },
+                { title: "Articles" },
               ]}
               style={{
                 marginBottom: 20,
@@ -98,7 +98,8 @@ export default function Home() {
             <div style={{ textAlign: "left" }}>
               <Menu
                 mode="horizontal"
-                selectedKeys={[channel.toString()]}
+                theme="light"
+                selectedKeys={[channel.name]}
                 onClick={(e) => setChannel(e.key)}
                 items={items}
                 style={{
@@ -113,7 +114,8 @@ export default function Home() {
         <Card>
           <Content style={{ direction: "ltr" }}>
             <Title level={1} className="blog-header">
-              <span className="icon"></span> Blogs
+              <span className="icon"></span>
+              Articles
             </Title>
             <Row gutter={[32, 32]} className="blog-list">
               {list.map((blog) => (
@@ -148,7 +150,7 @@ export default function Home() {
                           shape="circle"
                           icon={<EditOutlined />}
                           onClick={() => {
-                            navigate(`/publish?id=${2}`);
+                            navigate(`/publish?id=${blog.id}`);
                           }}
                         />
                       )}
