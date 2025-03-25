@@ -81,7 +81,13 @@ const Publish = () => {
       content: content,
       cover: {
         imageType: imageType,
-        urls: imageList.map((item) => item.response.data),
+        urls: imageList.map((item) => {
+          if (item.response) {
+            return item.response.data;
+          } else {
+            return item.url;
+          }
+        }),
       },
 
       channel: channel,
@@ -96,7 +102,8 @@ const Publish = () => {
       return;
     } else {
       if (blogId) {
-        const res = await updateArticleAPI(formValue, blogId);
+        // console.log(reqData);
+        const res = await updateArticleAPI(reqData, blogId);
         message.success("Successfully Updated Blog");
       } else {
         // console.log(reqData);
